@@ -1,4 +1,5 @@
 ﻿using Assets.Custom.Scripts;
+using Assets.Custom.Scripts.Controllers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,6 +58,38 @@ public class AddGamePlayers : MonoBehaviour
         instance.transform.position = gameManager.Players[9].HomePosition;
         generatedDefensivePlayers.Add(instance);
 
+        gameManager.DefensivePlayersAsGameObjects = generatedDefensivePlayers;
+
+        GameObject[] offensivePlayers = GameObject.FindGameObjectsWithTag("OffensivePlayer");
+        PlayerKitController.UpdateOffensivePlayerKits(offensivePlayers);
+        /*foreach(GameObject offPlayer in offensivePlayers)
+        {
+            GameObject spine = offPlayer.transform.GetChild(0).gameObject;
+            spine.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = gameManager.SelectedAwayKit.ShirtColor;
+            spine.transform.GetChild(2).gameObject.transform.GetChild(0).
+                transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = gameManager.SelectedAwayKit.ShirtColor;
+            spine.transform.GetChild(3).gameObject.transform.GetChild(0).
+                transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color = gameManager.SelectedAwayKit.ShirtColor;
+            spine.transform.GetChild(4).gameObject.transform.GetChild(0).
+                GetComponent<Renderer>().material.color = gameManager.SelectedAwayKit.ShortsColor;
+            spine.transform.GetChild(5).gameObject.transform.GetChild(1).
+                GetComponent<Renderer>().material.color = gameManager.SelectedAwayKit.ShortsColor;
+        }*/
+
+        PlayerKitController.UpdateDefensivePlayerKits(gameManager.DefensivePlayersAsGameObjects);
+        /*foreach(GameObject defPlayer in gameManager.DefensivePlayersAsGameObjects)
+        {
+            GameObject spine = defPlayer.transform.GetChild(0).gameObject;
+            spine.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = gameManager.SelectedHomeKit.ShirtColor;
+            spine.transform.GetChild(2).gameObject.transform.GetChild(0).
+                transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = gameManager.SelectedHomeKit.ShirtColor;
+            spine.transform.GetChild(3).gameObject.transform.GetChild(0).
+                transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color = gameManager.SelectedHomeKit.ShirtColor;
+            spine.transform.GetChild(4).gameObject.transform.GetChild(0).
+                GetComponent<Renderer>().material.color = gameManager.SelectedHomeKit.ShortsColor;
+            spine.transform.GetChild(5).gameObject.transform.GetChild(1).
+                GetComponent<Renderer>().material.color = gameManager.SelectedHomeKit.ShortsColor;
+        }*/
     }
 
     // Update is called once per frame
