@@ -165,7 +165,7 @@ namespace Assets.Custom.Scripts
             } else
             {
                 DontDestroyOnLoad(gameObject);
-                this._Formation = new Formation_442(); // izvuci podatak pomocu serijalizacije ili uz pomoc PlayerPrefs                
+                this._Formation = new Formation_433(); // izvuci podatak pomocu serijalizacije ili uz pomoc PlayerPrefs
                 Instance = this;
                 this._Formation.UpdatePlayers();
                 CreateOffensivePlayers();

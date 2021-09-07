@@ -8,6 +8,8 @@ namespace Assets.Custom.Scripts.FootballLogic
 
         private Vector3 homePosition;
 
+        private string positionName;
+
         #endregion
 
         #region Properties
@@ -16,6 +18,12 @@ namespace Assets.Custom.Scripts.FootballLogic
         {
             get { return homePosition; }
             set { homePosition = value; }
+        }
+
+        public string PositionName
+        {
+            get { return positionName; }
+            set { positionName = value; }
         }
 
         #endregion

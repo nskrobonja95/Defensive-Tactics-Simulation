@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Custom.Scripts
 {
@@ -31,5 +32,9 @@ namespace Assets.Custom.Scripts
         }
 
         public abstract void UpdatePlayers();
+
+        public abstract void UpdatePlayerPositions();
+
+        public abstract void UpdatePlayerMovementScripts();
     }
 }

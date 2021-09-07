@@ -28,7 +28,7 @@ namespace Assets.Custom.UI
 
         public void DropdownValueChanged(Dropdown change)
         {
-            GameObject.Find("FormationDropdown");
+            //GameObject.Find("FormationDropdown");
             if (change.options[change.value].text.Equals("4-4-2"))
             {
                 gameManager._Formation = new Formation_442();

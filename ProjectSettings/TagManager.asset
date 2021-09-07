@@ -7,6 +7,7 @@ TagManager:
   - OffensivePlayer
   - ShirtDress
   - ShortsDress
+  - DefensivePlayer
   layers:
   - Default
   - TransparentFX

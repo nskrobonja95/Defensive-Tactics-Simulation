@@ -21,7 +21,21 @@ namespace Assets.Custom.Scripts.Controllers
         {
             _gameManager = GameManager.Instance;
             offensePlayers = GameObject.FindGameObjectsWithTag("OffensivePlayer");
-            InitialiseOffensivePlayers();
+            GameObject rb_offense = GameObject.Find("RightBack_Offense");
+            GameObject rw_offense = GameObject.Find("RightWing_Offense");
+            GameObject cmf_offense = GameObject.Find("CentralMidfielder_Offense");
+            GameObject lcb_offense = GameObject.Find("LeftCB_Offense");
+            GameObject rcb_offense = GameObject.Find("RightCB_Offense");
+            GameObject lb_offense = GameObject.Find("LeftBack_Offense");
+            GameObject lw_offense = GameObject.Find("LeftWing_Offense");
+            _gameManager._OffensivePlayers[0].Position = rb_offense.transform.position;
+            _gameManager._OffensivePlayers[1].Position = rcb_offense.transform.position;
+            _gameManager._OffensivePlayers[2].Position = lcb_offense.transform.position;
+            _gameManager._OffensivePlayers[3].Position = lb_offense.transform.position;
+            _gameManager._OffensivePlayers[4].Position = rw_offense.transform.position;
+            _gameManager._OffensivePlayers[5].Position = cmf_offense.transform.position;
+            _gameManager._OffensivePlayers[6].Position = lw_offense.transform.position;
+            InitialiseInBallPossesion();
         }
 
         private void Update()
@@ -32,11 +46,11 @@ namespace Assets.Custom.Scripts.Controllers
             }
         }
 
-        private void InitialiseOffensivePlayers()
+        private void InitialiseInBallPossesion()
         {
             for (int i=0; i<_gameManager._OffensivePlayers.Count; ++i)
             {
-                _gameManager._OffensivePlayers[i].Position= offensePlayers[i].transform.position;
+                //_gameManager._OffensivePlayers[i].Position= offensePlayers[i].transform.position;
                 if (Vector3.Distance(ballObj.transform.position, _gameManager._OffensivePlayers[i].Position) < 5.0f)
                     _gameManager._OffensivePlayers[i].InBallPossesion = true;
                 else

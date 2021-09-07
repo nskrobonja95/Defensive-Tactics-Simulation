@@ -30,8 +30,8 @@ namespace Assets.Custom.UI
         private void Start()
         {
             _gameManager = GameManager.Instance;
-            defensePlayerModel = GameObject.Find("myPlayerModel");
-            offensePlayerModel = GameObject.Find("PlayerModelOffense");
+            defensePlayerModel = GameObject.Find("playerModelForUI");
+            offensePlayerModel = GameObject.Find("offensivePlayerForUI");
             PlayerKitController.UpdateDefensivePlayer(defensePlayerModel);
             PlayerKitController.UpdateOffensivePlayer(offensePlayerModel);
             backHomeKitBtn.onClick.AddListener(BackHomeKitBtn_Click);
