@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Custom.Scripts.States
 {
-    public abstract class State
+    public class State
     {
-        public abstract void Execute();
+        public virtual void Enter() { }
+
+        public virtual void HandleInput() { }
+
+        public virtual void LogicUpdate() { }
+
+        public virtual void Exit() { }
+
     }
 }

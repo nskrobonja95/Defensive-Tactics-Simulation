@@ -56,16 +56,16 @@ public class SwitchCamera : MonoBehaviour
             {
                 ActivateCoachMode();
             }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadSceneAsync("MenuScene");
+            }
         } else
         {
             if (Input.GetKeyDown(KeyCode.M))
             {
                 DeactivateCoachMode();
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SceneManager.LoadSceneAsync("MenuScene");
         }
     }
 

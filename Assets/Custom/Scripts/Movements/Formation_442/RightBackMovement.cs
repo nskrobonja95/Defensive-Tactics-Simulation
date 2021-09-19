@@ -11,15 +11,15 @@ namespace Assets.Custom.Scripts.Movements
     class RightBackMovement : PlayerMovement
     {
         
-        protected override void CalculateBestPosition(Vector3 homePosition, Vector3 ballPosition, FootballField field)
+        protected override void CalculateBestPosition(Vector3 homePosition, Vector3 ballPosition, int fieldWidth, int fieldLength)
         {
-            if (ballPosition.z <= field.Height / 3)
+            if (ballPosition.z <= fieldLength / 3)
                 return;
 
-            if (0f <= ballPosition.x && ballPosition.x <= field.Width / 3)
+            if (0f <= ballPosition.x && ballPosition.x <= fieldWidth / 3)
             {
                 //region 1
-                if (field.Height / 2 <= ballPosition.z && ballPosition.z <= (field.Height * 3) / 4)
+                if (fieldLength / 2 <= ballPosition.z && ballPosition.z <= (fieldLength * 3) / 4)
                 {
                     newPosition = new Vector3(HomePosition.x - 10, HomePosition.y,
                                                 HomePosition.z - 10);
@@ -31,10 +31,10 @@ namespace Assets.Custom.Scripts.Movements
                                                 HomePosition.z - 5);
                 }
             }
-            else if (field.Width / 3 <= ballPosition.x && ballPosition.x <= (field.Width * 2) / 3)
+            else if (fieldWidth / 3 <= ballPosition.x && ballPosition.x <= (fieldWidth * 2) / 3)
             {
                 //region 3
-                if (field.Height / 2 <= ballPosition.z && ballPosition.z <= (field.Height * 3) / 4)
+                if (fieldLength / 2 <= ballPosition.z && ballPosition.z <= (fieldLength * 3) / 4)
                 {
                     newPosition = new Vector3(HomePosition.x - 4, HomePosition.y,
                                                 HomePosition.z);
@@ -49,7 +49,7 @@ namespace Assets.Custom.Scripts.Movements
             else
             {
                 //region 5
-                if (field.Height / 2 <= ballPosition.z && ballPosition.z <= (field.Height * 3) / 4)
+                if (fieldLength / 2 <= ballPosition.z && ballPosition.z <= (fieldLength * 3) / 4)
                 {
                     newPosition = new Vector3(HomePosition.x, HomePosition.y,
                                                 HomePosition.z + 4);

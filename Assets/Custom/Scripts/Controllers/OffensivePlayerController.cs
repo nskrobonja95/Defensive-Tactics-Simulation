@@ -1,4 +1,5 @@
 ﻿using Assets.Custom.Scripts.FootballLogic;
+using Assets.Custom.Scripts.States;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,78 +12,70 @@ namespace Assets.Custom.Scripts.Controllers
 {
     public class OffensivePlayerController : MonoBehaviour
     {
+        #region variables
         public GameObject ballObj;
 
         private GameManager _gameManager;
+        #endregion
 
-        private GameObject[] offensePlayers;
-
+        #region MonoBehaviour callbacks
         private void Start()
         {
             _gameManager = GameManager.Instance;
-            offensePlayers = GameObject.FindGameObjectsWithTag("OffensivePlayer");
-            GameObject rb_offense = GameObject.Find("RightBack_Offense");
-            GameObject rw_offense = GameObject.Find("RightWing_Offense");
-            GameObject cmf_offense = GameObject.Find("CentralMidfielder_Offense");
-            GameObject lcb_offense = GameObject.Find("LeftCB_Offense");
-            GameObject rcb_offense = GameObject.Find("RightCB_Offense");
-            GameObject lb_offense = GameObject.Find("LeftBack_Offense");
-            GameObject lw_offense = GameObject.Find("LeftWing_Offense");
-            _gameManager._OffensivePlayers[0].Position = rb_offense.transform.position;
-            _gameManager._OffensivePlayers[1].Position = rcb_offense.transform.position;
-            _gameManager._OffensivePlayers[2].Position = lcb_offense.transform.position;
-            _gameManager._OffensivePlayers[3].Position = lb_offense.transform.position;
-            _gameManager._OffensivePlayers[4].Position = rw_offense.transform.position;
-            _gameManager._OffensivePlayers[5].Position = cmf_offense.transform.position;
-            _gameManager._OffensivePlayers[6].Position = lw_offense.transform.position;
             InitialiseInBallPossesion();
+            GameObject rb_offense = GameObject.Find("RightBack_Offense2");
+            GameObject rw_offense = GameObject.Find("RightWing_Offense2");
+            GameObject cmf_offense = GameObject.Find("CentralMidfielder_Offense2");
+            GameObject lcb_offense = GameObject.Find("LeftCB_Offense2");
+            GameObject rcb_offense = GameObject.Find("RightCB_Offense2");
+            GameObject lb_offense = GameObject.Find("LeftBack_Offense2");
+            GameObject lw_offense = GameObject.Find("LeftWing_Offense2");
+            _gameManager.OffensivePlayersAsGameObjects = new List<GameObject>();
+            _gameManager.OffensivePlayersAsGameObjects.Add(rb_offense);
+            _gameManager.ActivePlayerIdx = 0;
+            _gameManager.OffensivePlayersAsGameObjects.Add(rcb_offense);
+            _gameManager.OffensivePlayersAsGameObjects.Add(lcb_offense);
+            _gameManager.OffensivePlayersAsGameObjects.Add(lb_offense);
+            _gameManager.OffensivePlayersAsGameObjects.Add(rw_offense);
+            _gameManager.OffensivePlayersAsGameObjects.Add(cmf_offense);
+            _gameManager.OffensivePlayersAsGameObjects.Add(lw_offense);
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            RotatePlayersTowardsBall();
+        }
+
+        #endregion
+
+        #region Methods
+        private void RotatePlayersTowardsBall()
+        {
+            float speed = 50.0f;
+            var step = speed * Time.deltaTime;
+            for (int i = 0; i < _gameManager.OffensivePlayersAsGameObjects.Count; ++i)
             {
-                PassBall();
+                Vector3 targetRotation = _gameManager.OffensivePlayersAsGameObjects[i].transform.position - new Vector3(ballObj.transform.position.x, _gameManager.OffensivePlayersAsGameObjects[i].transform.position.y,
+                                ballObj.transform.position.z);
+                Quaternion target = Quaternion.LookRotation(targetRotation, Vector3.up);
+                _gameManager.OffensivePlayersAsGameObjects[i].transform.rotation = Quaternion.RotateTowards(_gameManager.OffensivePlayersAsGameObjects[i].transform.rotation, target, step);
             }
         }
 
         private void InitialiseInBallPossesion()
         {
             for (int i=0; i<_gameManager._OffensivePlayers.Count; ++i)
-            {
-                //_gameManager._OffensivePlayers[i].Position= offensePlayers[i].transform.position;
+            {                
                 if (Vector3.Distance(ballObj.transform.position, _gameManager._OffensivePlayers[i].Position) < 5.0f)
-                    _gameManager._OffensivePlayers[i].InBallPossesion = true;
+                {
+                    _gameManager._OffensivePlayers[i].InBallPossesion = true;                    
+                    _gameManager.ActivePlayerIdx = i;
+                }
                 else
                     _gameManager._OffensivePlayers[i].InBallPossesion = false;
             }
         }
-
-        public void PassBall() //ideja za dalje: dozvoliti korisniku da odabere igraca kojem ce dodati
-        {
-            System.Random random = new System.Random();
-            int idxOfPlayerInBallPosession = -1;
-            int idx = -1;
-
-            for (int i = 0; i < _gameManager._OffensivePlayers.Count; ++i)
-            {
-                if (_gameManager._OffensivePlayers[i].InBallPossesion)
-                    idxOfPlayerInBallPosession = i;
-            }
-
-            do {
-                idx = random.Next(0, _gameManager._OffensivePlayers.Count);
-            } while (idx == idxOfPlayerInBallPosession);
-
-            _gameManager._OffensivePlayers[idxOfPlayerInBallPosession].InBallPossesion = false;
-            _gameManager._OffensivePlayers[idx].InBallPossesion = true;
-
-            _gameManager.BallPosition = new Vector3(
-                _gameManager._OffensivePlayers[idx].Position.x,
-                ballObj.transform.position.y,
-                _gameManager._OffensivePlayers[idx].Position.z - 3.15f);
-
-        }
+        #endregion
 
     }
 }

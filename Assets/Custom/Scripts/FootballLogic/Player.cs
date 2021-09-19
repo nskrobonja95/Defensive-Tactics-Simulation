@@ -8,7 +8,11 @@ namespace Assets.Custom.Scripts.FootballLogic
 
         private Vector3 homePosition;
 
-        private string positionName;
+        private string teamPositionName;
+
+        private string teamPositionCode;
+
+        private Vector3 currentPosition;
 
         #endregion
 
@@ -20,10 +24,22 @@ namespace Assets.Custom.Scripts.FootballLogic
             set { homePosition = value; }
         }
 
-        public string PositionName
+        public string TeamPositionName
         {
-            get { return positionName; }
-            set { positionName = value; }
+            get { return teamPositionName; }
+            set { teamPositionName = value; }
+        }
+
+        public string TeamPositionCode
+        {
+            get { return teamPositionCode; }
+            set { teamPositionCode = value; }
+        }
+
+        public Vector3 CurrentPosition
+        {
+            get { return currentPosition; }
+            set { currentPosition = value; }
         }
 
         #endregion
@@ -35,7 +51,12 @@ namespace Assets.Custom.Scripts.FootballLogic
         public Player(Vector3 position)
         {
             this.HomePosition = position;
+            this.CurrentPosition = position;
         }
+
+        #endregion
+
+        #region methods
 
         #endregion
     }

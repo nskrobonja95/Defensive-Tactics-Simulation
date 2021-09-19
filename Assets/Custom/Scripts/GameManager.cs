@@ -1,4 +1,5 @@
 ﻿using Assets.Custom.Scripts.FootballLogic;
+using Assets.Custom.Scripts.Formations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Assets.Custom.Scripts
     public class GameManager : MonoBehaviour
     {
         #region Fields
+        public GameObject ballObj;
+
         private Vector3 ballPosition;
 
         private float fieldWidth = 65;
@@ -20,11 +23,17 @@ namespace Assets.Custom.Scripts
 
         private Formation _formation;
 
+        private TeamFormation _teamFormation;
+
         private List<Player> players;
 
         private List<GameObject> defensivePlayersAsGameObjects;
 
         private List<OffensivePlayer> _offensivePlayers;
+
+        private List<GameObject> offensivePlayersAsGameObjects;
+
+        private int activePlayerIdx;
 
         private bool coachMode;
 
@@ -76,6 +85,12 @@ namespace Assets.Custom.Scripts
             set { _formation = value; }
         }
 
+        public TeamFormation _TeamFormation
+        {
+            get { return _teamFormation; }
+            set { _teamFormation = value; }
+        }
+
         public List<Player> Players
         {
             get { return players; }
@@ -87,6 +102,19 @@ namespace Assets.Custom.Scripts
             get { return defensivePlayersAsGameObjects; }
             set { defensivePlayersAsGameObjects = value; }
         }
+
+        public List<GameObject> OffensivePlayersAsGameObjects
+        {
+            get { return offensivePlayersAsGameObjects; }
+            set { offensivePlayersAsGameObjects = value; }
+        }
+
+        public int ActivePlayerIdx
+        {
+            get { return activePlayerIdx; }
+            set { activePlayerIdx = value; }
+        }
+
         public List<OffensivePlayer> _OffensivePlayers
         {
             get { return _offensivePlayers; }
@@ -155,7 +183,7 @@ namespace Assets.Custom.Scripts
         }
         #endregion
 
-        #region Methods
+        #region MonoBehaviour callbacks
 
         private void Awake()
         {
@@ -164,11 +192,13 @@ namespace Assets.Custom.Scripts
                 Destroy(this.gameObject);
             } else
             {
-                DontDestroyOnLoad(gameObject);
-                this._Formation = new Formation_433(); // izvuci podatak pomocu serijalizacije ili uz pomoc PlayerPrefs
+                DontDestroyOnLoad(gameObject);                
+                this._Formation = new Formation_442(); // izvuci podatak pomocu serijalizacije ili uz pomoc PlayerPrefs
+                this._TeamFormation = new TeamFormation_442(ballObj.transform.position, FieldWidth, FieldLength);
                 Instance = this;
                 this._Formation.UpdatePlayers();
                 CreateOffensivePlayers();
+                InitialiseTeamFormation();
                 this.AvailableHomeKits = new Color[3, 2];
                 this.AvailableHomeKits[0, 0] = new Color(1.0f, 0.0f, 0.0f);
                 this.AvailableHomeKits[0, 1] = new Color(1.0f, 1.0f, 1.0f);
@@ -191,6 +221,98 @@ namespace Assets.Custom.Scripts
             }
         }
 
+        private void InitialiseTeamFormation()
+        {
+            _TeamFormation.FieldWidth = FieldWidth;
+            _TeamFormation.FieldLength = FieldLength;
+
+            Player player;
+
+            player = new Player();
+
+            GameObject lb = GameObject.Find("LeftBack_Defense");
+            player.HomePosition = lb.transform.position;
+            player.CurrentPosition = lb.transform.position;
+            player.TeamPositionName = "Left Back";
+            player.TeamPositionCode = "LB";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject lcb = GameObject.Find("LeftCentralBack_Defense");
+            player.HomePosition = lcb.transform.position;
+            player.CurrentPosition = lcb.transform.position;
+            player.TeamPositionName = "Left Central Back";
+            player.TeamPositionCode = "LCB";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject rcb = GameObject.Find("RightCentralBack_Defense");
+            player.HomePosition = rcb.transform.position;
+            player.CurrentPosition = rcb.transform.position;
+            player.TeamPositionName = "Right Central Back";
+            player.TeamPositionCode = "RCB";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject rb = GameObject.Find("RightBack_Defense");
+            player.HomePosition = rb.transform.position;
+            player.CurrentPosition = rb.transform.position;
+            player.TeamPositionName = "Right Back";
+            player.TeamPositionCode = "RCB";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject rmf = GameObject.Find("LeftDefensiveMidfielder_Defense");
+            player.HomePosition = rmf.transform.position;
+            player.CurrentPosition = rmf.transform.position;
+            player.TeamPositionName = "Right Midfielder";
+            player.TeamPositionCode = "RMF";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject lmf = GameObject.Find("RightDefensiveMidfielder_Defense");
+            player.HomePosition = lmf.transform.position;
+            player.CurrentPosition = lmf.transform.position;
+            player.TeamPositionName = "Left Midfielder";
+            player.TeamPositionCode = "Lmf";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject rw = GameObject.Find("RightWing_Defense");
+            player.HomePosition = rw.transform.position;
+            player.CurrentPosition = rw.transform.position;
+            player.TeamPositionName = "Right Wing";
+            player.TeamPositionCode = "RW";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject lw = GameObject.Find("LeftWing_Defense");
+            player.HomePosition = lw.transform.position;
+            player.CurrentPosition = lw.transform.position;
+            player.TeamPositionName = "Left Wing";
+            player.TeamPositionCode = "LW";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject ls = GameObject.Find("LeftStriker_Defense");
+            player.HomePosition = ls.transform.position;
+            player.CurrentPosition = ls.transform.position;
+            player.TeamPositionName = "Left Striker";
+            player.TeamPositionCode = "LS";
+            _TeamFormation.Players.Add(player);
+
+            player = new Player();
+            GameObject rs = GameObject.Find("RightStriker_Defense");
+            player.HomePosition = rs.transform.position;
+            player.CurrentPosition = rs.transform.position;
+            player.TeamPositionName = "Right Striker";
+            player.TeamPositionCode = "RS";
+            _TeamFormation.Players.Add(player);
+        }
+
+        #endregion
+
+        #region Methods
         private void CreateOffensivePlayers()
         {
             this._OffensivePlayers = new List<OffensivePlayer>();
@@ -199,6 +321,29 @@ namespace Assets.Custom.Scripts
             {
                 this._OffensivePlayers.Add(new OffensivePlayer());
             }
+            GameObject rb_offense = GameObject.Find("RightBack_Offense2");
+            GameObject rw_offense = GameObject.Find("RightWing_Offense2");
+            GameObject cmf_offense = GameObject.Find("CentralMidfielder_Offense2");
+            GameObject lcb_offense = GameObject.Find("LeftCB_Offense2");
+            GameObject rcb_offense = GameObject.Find("RightCB_Offense2");
+            GameObject lb_offense = GameObject.Find("LeftBack_Offense2");
+            GameObject lw_offense = GameObject.Find("LeftWing_Offense2");
+            offensivePlayersAsGameObjects = new List<GameObject>();
+            _OffensivePlayers[0].Position = rb_offense.transform.position;
+            offensivePlayersAsGameObjects.Add(rb_offense);
+            this.ActivePlayerIdx = 0;
+            _OffensivePlayers[1].Position = rcb_offense.transform.position;
+            offensivePlayersAsGameObjects.Add(rcb_offense);
+            _OffensivePlayers[2].Position = lcb_offense.transform.position;
+            offensivePlayersAsGameObjects.Add(lcb_offense);
+            _OffensivePlayers[3].Position = lb_offense.transform.position;
+            offensivePlayersAsGameObjects.Add(lb_offense);
+            _OffensivePlayers[4].Position = rw_offense.transform.position;
+            offensivePlayersAsGameObjects.Add(rw_offense);
+            _OffensivePlayers[5].Position = cmf_offense.transform.position;
+            offensivePlayersAsGameObjects.Add(cmf_offense);
+            _OffensivePlayers[6].Position = lw_offense.transform.position;
+            offensivePlayersAsGameObjects.Add(lw_offense);
         }
 
         #endregion

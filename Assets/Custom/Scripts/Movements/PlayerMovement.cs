@@ -29,7 +29,7 @@ public abstract class PlayerMovement : MonoBehaviour
     Animator animator;
 
     protected abstract void CalculateBestPosition(Vector3 homePosition, 
-        Vector3 ballPosition, FootballField field);
+        Vector3 ballPosition, int fieldWidth, int fieldLength);
 
     //private PlayerState currentState;
 
@@ -58,13 +58,14 @@ public abstract class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CalculateBestPosition(HomePosition, ballObj.transform.position, field);
+        CalculateBestPosition(HomePosition, ballObj.transform.position, 
+            (int)_gameManager.FieldWidth, (int)_gameManager.FieldLength);
         if (gameObject.transform.position != newPosition) {
             animator.SetBool("Running", true);
             orientation = newPosition - gameObject.transform.position;
             gameObject.transform.rotation = Quaternion.LookRotation(orientation);
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, newPosition,
-                                PlayerSpeed);
+            gameObject.transform.position = Vector3.MoveTowards(
+                gameObject.transform.position, newPosition, PlayerSpeed);
         }
         else
         {

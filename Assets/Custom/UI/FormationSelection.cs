@@ -15,11 +15,18 @@ namespace Assets.Custom.UI
 
         Dropdown m_Dropdown;
 
+        Dictionary<string, int> options;
+
         void Start()
         {
+            options = new Dictionary<string, int>();
+            options.Add("4-4-2", 0);
+            options.Add("4-3-3", 1);
+            options.Add("4-2-3-1", 2);
             gameManager = GameManager.Instance;
             //Fetch the Dropdown GameObject
             m_Dropdown = GetComponent<Dropdown>();
+            m_Dropdown.value = options[gameManager._Formation.FormationCode];
             //Add listener for when the value of the Dropdown changes, to take action
             m_Dropdown.onValueChanged.AddListener(delegate {
                 DropdownValueChanged(m_Dropdown);
