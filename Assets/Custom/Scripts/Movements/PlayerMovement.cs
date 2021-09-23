@@ -8,6 +8,7 @@ using UnityEngine;
 
 public abstract class PlayerMovement : MonoBehaviour
 {
+    #region fields
     public float PlayerSpeed;
 
     protected Vector3 HomePosition;
@@ -28,8 +29,11 @@ public abstract class PlayerMovement : MonoBehaviour
 
     Animator animator;
 
-    protected abstract void CalculateBestPosition(Vector3 homePosition, 
-        Vector3 ballPosition, int fieldWidth, int fieldLength);
+    protected enum BallRegion { RightBack_Reg, RightWing_Reg, RightCB_Reg, LeftCB_Reg, 
+                                                    CenterMidfielder_Reg, LeftBack_Reg, LeftWing_Reg, NonRegion}
+    protected BallRegion ballRegion;
+    #endregion
+
 
     //private PlayerState currentState;
 
@@ -75,6 +79,55 @@ public abstract class PlayerMovement : MonoBehaviour
         }
     }
 
-    
-       
+    #region methods
+    protected abstract void CalculateBestPosition(Vector3 homePosition,
+        Vector3 ballPosition, int fieldWidth, int fieldLength);
+
+    public void findActiveRegion(Vector3 ballPosition, int fieldWidth, int fieldLength)
+    {
+        float x = ballPosition.x; //compare with width
+        float y = ballPosition.z; // compare with height
+
+        if(y < fieldLength / 2 - 10)
+        {
+            ballRegion = BallRegion.NonRegion;
+            return;
+        }
+
+        //right side of field
+        if(x <= fieldWidth / 3 - 5)
+        {
+            if(y > fieldLength / 4 * 3 + 5)
+                ballRegion = BallRegion.RightBack_Reg;
+            else
+                ballRegion = BallRegion.RightWing_Reg;
+            return;
+        }
+
+        if(fieldWidth / 3 - 2 > x && x < fieldWidth / 3 * 2)
+        {
+            if(y > fieldLength / 4 * 3 + 5)
+            {
+                if (x < fieldWidth / 2)
+                    ballRegion = BallRegion.RightCB_Reg;
+                else
+                    ballRegion = BallRegion.LeftCB_Reg;
+            }
+            else
+            {
+                ballRegion = BallRegion.CenterMidfielder_Reg;
+            }
+            return;
+        }
+
+        if (y > fieldLength / 4 * 3 + 5)
+            ballRegion = BallRegion.LeftBack_Reg;
+        else
+            ballRegion = BallRegion.LeftWing_Reg;
+    }
+
+    #endregion
+
+
+
 }
